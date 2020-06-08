@@ -1,0 +1,50 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>resource/images/icon.png</file>
+        <file>resource/images/background.png</file>
+        <file>resource/images/patrick.left.png</file>
+        <file>resource/images/patrick.right.png</file>
+        <file>resource/images/platform.png</file>
+    </qresource>
+    <qresource prefix="/player">
+        <file>images/player_L.png</file>
+        <file>images/player_Left_Jump.png</file>
+        <file>images/player_Mouth.png</file>
+        <file>images/player_Right.png</file>
+        <file>images/player_Right_Jump.png</file>
+        <file>images/player_Shoot.png</file>
+        <file>images/player_Shoot_Jump.png</file>
+        <file>images/bullet.png</file>
+    </qresource>
+    <qresource prefix="/platform">
+        <file>images/Cracked_Platform1.png</file>
+        <file>images/Cracked_Platform2.png</file>
+        <file>images/Cracked_Platform3.png</file>
+        <file>images/Cracked_Platform4.png</file>
+        <file>images/Horiziontal_Move_Platform.png</file>
+        <file>images/Normal_Platform.png</file>
+    </qresource>
+    <qresource prefix="/background">
+        <file>images/background.png</file>
+        <file>images/pause.png</file>
+        <file>images/toolbar.png</file>
+        <file>images/welcome.png</file>
+        <file>images/end.png</file>
+        <file>images/endBar.png</file>
+    </qresource>
+    <qresource prefix="/button">
+        <file>images/play_button.png</file>
+        <file>images/play_button_clicked.png</file>
+        <file>images/pauseButton.png</file>
+        <file>images/resumeButton.png</file>
+        <file>images/resumeButton_clicked.png</file>
+        <file>images/menuButton.png</file>
+        <file>images/menuButton_clicked.png</file>
+        <file>images/playAgainButton.png</file>
+        <file>images/playAgainButton_clicked.png</file>
+    </qresource>
+    <qresource prefix="/font">
+        <file>resource/al-seana.ttf</file>
+        <file>resource/DoodleJump.ttf</file>
+    </qresource>
+</RCC>

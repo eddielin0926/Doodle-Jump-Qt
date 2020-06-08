@@ -25,11 +25,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        button.cpp \
+        doodlejump.cpp \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        platform.cpp \
+        player.cpp \
+        props.cpp
 
 HEADERS += \
-        mainwindow.h
+        button.h \
+        doodlejump.h \
+        mainwindow.h \
+        platform.h \
+        player.h \
+        props.h
 
 FORMS += \
         mainwindow.ui
@@ -38,3 +48,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    res.qrc
