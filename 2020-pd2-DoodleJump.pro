@@ -25,8 +25,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        bullet.cpp \
         button.cpp \
         doodlejump.cpp \
+        hazard.cpp \
         main.cpp \
         mainwindow.cpp \
         platform.cpp \
@@ -34,8 +36,10 @@ SOURCES += \
         props.cpp
 
 HEADERS += \
+        bullet.h \
         button.h \
         doodlejump.h \
+        hazard.h \
         mainwindow.h \
         platform.h \
         player.h \

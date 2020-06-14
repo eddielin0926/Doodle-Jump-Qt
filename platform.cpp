@@ -2,12 +2,23 @@
 #include <QPixmap>
 #include <QDebug>
 
-Platform::Platform():timer(NULL), VEL(0){}
+Platform::Platform(): props(NULL), timer(NULL), VEL(0){}
 
-NormalPlatform::NormalPlatform()
+NormalPlatform::NormalPlatform(QTimer * time)
 {
+    timer = time;
     setPixmap(QPixmap(":/platform/images/Normal_Platform.png", "PNG"));
     setZValue(1);
+}
+
+NormalPlatform::~NormalPlatform()
+{
+    if(scene()){
+        scene()->removeItem(this);
+    }
+    if(props){
+        delete props;
+    }
 }
 
 void NormalPlatform::collide(Player * player)
@@ -17,6 +28,17 @@ void NormalPlatform::collide(Player * player)
            player->pos().y() + player->pixmap().height() <= pos().y() + pixmap().height())
         player->setVel();
     }
+}
+
+void NormalPlatform::spawnProps()
+{
+    int p = rand() % 100;
+    if(p >= 30){
+        props = new Spring();
+    } else if (p >= 0) {
+        props = new PropellerHelmet(this, timer);
+    }
+
 }
 
 CrackedPlatform::CrackedPlatform()
@@ -63,13 +85,11 @@ void CrackedPlatform::falling()
     setY(pos().y() + VEL);
 }
 
-HorizontalMovePlatform::HorizontalMovePlatform()
+HorizontalMovePlatform::HorizontalMovePlatform(QTimer * time):NormalPlatform(time)
 {
     setPixmap(QPixmap(":/platform/images/Horiziontal_Move_Platform.png", "PNG"));
     setZValue(1);
 
-    timer = new QTimer;
-    timer->start(100);
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
 
     VEL = 10;

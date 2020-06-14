@@ -1,10 +1,6 @@
 <RCC>
-    <qresource prefix="/images">
-        <file>resource/images/icon.png</file>
-        <file>resource/images/background.png</file>
-        <file>resource/images/patrick.left.png</file>
-        <file>resource/images/patrick.right.png</file>
-        <file>resource/images/platform.png</file>
+    <qresource prefix="/icon">
+        <file>resource/icon.ico</file>
     </qresource>
     <qresource prefix="/player">
         <file>images/player_L.png</file>
@@ -14,7 +10,9 @@
         <file>images/player_Right_Jump.png</file>
         <file>images/player_Shoot.png</file>
         <file>images/player_Shoot_Jump.png</file>
-        <file>images/bullet.png</file>
+        <file>images/star1.png</file>
+        <file>images/star2.png</file>
+        <file>images/star3.png</file>
     </qresource>
     <qresource prefix="/platform">
         <file>images/Cracked_Platform1.png</file>
@@ -31,6 +29,7 @@
         <file>images/welcome.png</file>
         <file>images/end.png</file>
         <file>images/endBar.png</file>
+        <file>images/tapToChange.png</file>
     </qresource>
     <qresource prefix="/button">
         <file>images/play_button.png</file>
@@ -44,7 +43,26 @@
         <file>images/playAgainButton_clicked.png</file>
     </qresource>
     <qresource prefix="/font">
-        <file>resource/al-seana.ttf</file>
         <file>resource/DoodleJump.ttf</file>
+    </qresource>
+    <qresource prefix="/bullet">
+        <file>images/bullet.png</file>
+    </qresource>
+    <qresource prefix="/props">
+        <file>images/propellerHelmet.png</file>
+        <file>images/propellerHelmet1.png</file>
+        <file>images/propellerHelmet2.png</file>
+        <file>images/propellerHelmet3.png</file>
+        <file>images/spring.png</file>
+        <file>images/spring_stretch.png</file>
+    </qresource>
+    <qresource prefix="/hazard">
+        <file>images/monster1.png</file>
+        <file>images/monster2.png</file>
+        <file>images/monster3.png</file>
+        <file>images/monster4_1.png</file>
+        <file>images/monster4_2.png</file>
+        <file>images/monster4_3.png</file>
+        <file>images/hole.png</file>
     </qresource>
 </RCC>

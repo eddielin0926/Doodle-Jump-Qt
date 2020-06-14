@@ -2,12 +2,14 @@
 #define PLATFORM_H
 
 #include "player.h"
+#include "props.h"
 #include <QObject>
 #include <QGraphicsPixmapItem>
 #include <QTimer>
 #include <QDebug>
 
 class Player;
+class Props;
 
 class Platform: public QObject, public QGraphicsPixmapItem
 {
@@ -18,6 +20,9 @@ public:
     virtual ~Platform(){};
 
     virtual void collide(Player*){};
+    virtual void spawnProps(){};
+
+    Props * props;
 
 public slots:
     virtual void move(){};
@@ -32,10 +37,11 @@ class NormalPlatform: public Platform
     Q_OBJECT
 
 public:
-    NormalPlatform();
-    virtual ~NormalPlatform(){};
+    NormalPlatform(QTimer *);
+    virtual ~NormalPlatform();
 
     virtual void collide(Player*);
+    virtual void spawnProps();
 };
 
 class CrackedPlatform: public Platform
@@ -61,7 +67,7 @@ class HorizontalMovePlatform: public NormalPlatform
     Q_OBJECT
 
 public:
-    HorizontalMovePlatform();
+    HorizontalMovePlatform(QTimer *);
     virtual ~HorizontalMovePlatform();
 
 public slots: // or private?
