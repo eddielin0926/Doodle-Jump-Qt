@@ -105,11 +105,16 @@ DoodleJump::DoodleJump(QGraphicsView * v)
     scene->addItem(platform);
     scene->addItem(player);
 
+    scoreData = new Score();
+//    scoreData->read();
+
     std::srand(time(NULL));
 }
 
 void DoodleJump::play()
 {
+    scoreData->addToScene(scene);
+
     score = 0;
     last = 0;
     name = nameText->toPlainText();
@@ -411,6 +416,10 @@ void DoodleJump::end()
     scene->addItem(nameText);
     scene->addItem(playAgainButton);
     scene->addItem(menuButton);
+
+    scoreData->clean(scene);
+    scoreData->add(name, score);
+//    scoreData->save();
 
     for(auto platform: platforms){
         delete platform;

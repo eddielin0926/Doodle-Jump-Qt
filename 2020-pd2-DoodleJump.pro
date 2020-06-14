@@ -33,7 +33,8 @@ SOURCES += \
         mainwindow.cpp \
         platform.cpp \
         player.cpp \
-        props.cpp
+        props.cpp \
+        score.cpp
 
 HEADERS += \
         bullet.h \
@@ -43,7 +44,8 @@ HEADERS += \
         mainwindow.h \
         platform.h \
         player.h \
-        props.h
+        props.h \
+        score.h
 
 FORMS += \
         mainwindow.ui

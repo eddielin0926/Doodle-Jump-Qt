@@ -6,6 +6,7 @@
 #include "platform.h"
 #include "button.h"
 #include "hazard.h"
+#include "score.h"
 #include <QObject>
 #include <QTimer>
 #include <QGraphicsView>
@@ -18,6 +19,7 @@
 class Player;
 class Platform;
 class Hazard;
+class Score;
 
 class DoodleJump:public QObject
 {
@@ -49,6 +51,7 @@ private:
     int score, highestScore, last;
     QString name;
     Player * player;
+    Score * scoreData;
     QGraphicsScene * scene;
     QGraphicsView * view;
     QGraphicsPixmapItem background[2];

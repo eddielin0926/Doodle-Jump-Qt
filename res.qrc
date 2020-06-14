@@ -30,6 +30,7 @@
         <file>images/end.png</file>
         <file>images/endBar.png</file>
         <file>images/tapToChange.png</file>
+        <file>images/line.png</file>
     </qresource>
     <qresource prefix="/button">
         <file>images/play_button.png</file>

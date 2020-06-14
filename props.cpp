@@ -20,11 +20,11 @@ Spring::~Spring()
 void Spring::collide(Player * player)
 {
     if(player->getVel() > 0){
-        if(player->pos().y() + player->pixmap().height() >= pos().y() && \
-           player->pos().y() + player->pixmap().height() <= pos().y() + pixmap().height())
-        player->setVel(-45);
-        setPixmap(imgs[1]);
-        setY(y() - 30);
+        if(player->pos().y() + player->pixmap().height() <= pos().y() + pixmap().height()){
+            player->setVel(-45);
+            setPixmap(imgs[1]);
+            setY(y() - 30);
+        }
     }
 }
 
