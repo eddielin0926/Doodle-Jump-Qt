@@ -5,7 +5,7 @@
 #include <QPixmap>
 #include <QDebug>
 
-Player::Player(int x, int y, DoodleJump * dj)
+Player::Player(int x, int y, QTimer * t, DoodleJump * dj)
 {
     vel = -30;
     doodlejump = dj;
@@ -14,16 +14,17 @@ Player::Player(int x, int y, DoodleJump * dj)
     shield = false;
     isHit = false;
     props = NULL;
+    timer = t;
 
     mouth = new QGraphicsPixmapItem(QPixmap(":/player/images/player_Mouth.png"));
-    mouth->setZValue(2);
+    mouth->setZValue(5);
 
     star_imgs[0].load(":/player/images/star1.png");
     star_imgs[1].load(":/player/images/star2.png");
     star_imgs[2].load(":/player/images/star3.png");
 
     star = new QGraphicsPixmapItem(star_imgs[0]);
-    star->setZValue(2);
+    star->setZValue(5);
 
     imgs[0][0].load(":/player/images/player_L.png");
     imgs[0][1].load(":/player/images/player_Left_Jump.png");
@@ -33,14 +34,17 @@ Player::Player(int x, int y, DoodleJump * dj)
     imgs[2][1].load(":/player/images/player_Shoot_Jump.png");
     setPixmap(imgs[0][0]); // need to change
     setPos(x, y);
-    setZValue(2);
+    setZValue(4);
 
-    timer = new QTimer();
-    timer->start(32);
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
 
     // make the player focusable and set it to be the current focus
     setFlag(QGraphicsItem::ItemIsFocusable);
+
+    bulletsound = new QMediaPlayer();
+    bulletsound->setMedia(QUrl("qrc:/sound/resource/bullet.mp3"));
+    hitsound = new QMediaPlayer();
+    hitsound->setMedia(QUrl("qrc:/sound/resource/Monstercollide.mp3"));
 }
 
 void Player::keyPressEvent(QKeyEvent *event)
@@ -119,12 +123,18 @@ int Player::getVel()
 
 void Player::shoot()
 {
+    if(bulletsound->state() == QMediaPlayer::PlayingState){
+        bulletsound->setPosition(0);
+    } else if(bulletsound->state() == QMediaPlayer::StoppedState) {
+        bulletsound->play();
+    }
+
     mouth->setPos(x() + 35, y());
     if(status != 2){
         scene()->addItem(mouth);
     }
     setPixmap(imgs[2][0]);
-    Bullet * bullet = new Bullet(y() - 1000);
+    Bullet * bullet = new Bullet(timer, y() - 1000);
     bullet->setPos(x() + 35, y() - 5);
     scene()->addItem(bullet);
     status = 2;
@@ -132,6 +142,13 @@ void Player::shoot()
 
 void Player::hitByMonster()
 {
+    if(doodlejump->getTurnOnSound()){
+        if(hitsound->state() == QMediaPlayer::PlayingState){
+            hitsound->setPosition(0);
+        } else if(bulletsound->state() == QMediaPlayer::StoppedState) {
+            hitsound->play();
+        }
+    }
     isHit = true;
     star->setPos(pos().x() + 10, pos().y());
     scene()->addItem(star);
@@ -191,7 +208,9 @@ void Player::move()
     if(status == 2){
         mouth->setPos(x() + 35, y());
         if(count++ > 3){
-            scene()->removeItem(mouth);
+            if(mouth->scene()) {
+                scene()->removeItem(mouth);
+            }
             count = 0;
             status = 1;
         }

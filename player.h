@@ -8,6 +8,7 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include <QPixmap>
+#include <QMediaPlayer>
 #include <QDebug>
 
 class DoodleJump;
@@ -17,7 +18,7 @@ class Player:public QObject, public QGraphicsPixmapItem
     Q_OBJECT
 
 public:
-    Player(int, int, DoodleJump * = NULL);
+    Player(int, int, QTimer *, DoodleJump * = NULL);
 
     void keyPressEvent(QKeyEvent * event);
     void setVel(float = -30);
@@ -31,6 +32,7 @@ public:
 
     bool shield, isHit, inHole;
     Props * props;
+    DoodleJump * doodlejump;
 
 public slots:
     void move();
@@ -42,7 +44,7 @@ private:
     QPixmap imgs[3][2], star_imgs[3];
     QTimer * timer;
     QGraphicsPixmapItem * mouth, * star;
-    DoodleJump * doodlejump; // not necessary
+    QMediaPlayer * bulletsound, * hitsound;
 };
 
 #endif // PLAYER_H

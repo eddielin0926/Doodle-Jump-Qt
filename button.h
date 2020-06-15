@@ -12,14 +12,31 @@ class Button: public QObject, public QGraphicsPixmapItem
 public:
     Button(const char * = "", const char * = "", QGraphicsItem * parent = NULL);
 
-    void mousePressEvent(QGraphicsSceneMouseEvent * event);
-    void hoverEnterEvent(QGraphicsSceneHoverEvent * event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
+    void mousePressEvent(QGraphicsSceneMouseEvent *);
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
 
     QPixmap imgs[2];
 
 signals:
     void clicked();
+};
+
+class Option: public QObject, public QGraphicsPixmapItem
+{
+    Q_OBJECT;
+public:
+    Option(const char * = "", const char * = "", QGraphicsItem * parent = NULL);
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *);
+
+    QPixmap imgs[2];
+
+signals:
+    void clicked();
+
+private:
+    bool isOn;
 };
 
 #endif // BUTTON_H

@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QGraphicsPixmapItem>
 #include <QTimer>
+#include <QMediaPlayer>
 #include <QDebug>
 
 class Player;
@@ -28,6 +29,7 @@ public slots:
     virtual void move(){};
 
 protected:
+    QMediaPlayer * sound;
     QTimer * timer;
     float VEL;
 };
@@ -49,7 +51,7 @@ class CrackedPlatform: public Platform
     Q_OBJECT
 
 public:
-    CrackedPlatform();
+    CrackedPlatform(QTimer *);
     virtual ~CrackedPlatform();
 
     virtual void collide(Player*);
@@ -72,6 +74,17 @@ public:
 
 public slots: // or private?
     virtual void move();
+};
+
+class OneOffPlatform: public NormalPlatform
+{
+    Q_OBJECT
+
+public:
+    OneOffPlatform(QTimer *);
+    virtual ~OneOffPlatform();
+
+    virtual void collide(Player*);
 };
 
 #endif // PLATFORM_H

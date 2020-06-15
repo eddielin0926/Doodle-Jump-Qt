@@ -7,7 +7,8 @@
   Use left and right key to move the player left or right.
 - **Bullet**  
   ![Bullet](/images/bullet.png "/images/bullet.png")  
-  Player can shoot bullets to blast the monster.
+  Player can shoot bullets to blast the monster.  
+  Pressing space key to shoot bullet.
 - **Platform**
   - *Normal Platform*  
     ![Normal Platform](/images/Normal_Platform.png "/images/Normal_Platform.png ")  
@@ -18,6 +19,9 @@
   - *Horizontal Moving Platform*  
     ![Horizontal Moving Platform](/images/Horiziontal_Move_Platform.png "/images/Horiziontal_Move_Platform.png")  
     This platform will automatically move left and right.
+  - *One-off Platform*  
+    ![One-off Platform](/images/One-off_Platform1.png "/images/One-off_Platform1.png")  
+    After player jump on this platform, it will disappear.
 - **Hazard**
   - *Monster*  
     ![Monster](/images/monster1.png "/images/monster1.png")  
@@ -32,7 +36,7 @@
 - Player can jump automatically and can move across the boundary (10%)  
   > *player.cpp :: void Player::move()*
 - At least two kinds of platforms (10%)  
-  > *platform.h :: class NormalPlatform, CrackedPlatform, and HorizontalMovePlatform*
+  > *platform.h :: class NormalPlatform, CrackedPlatform, HorizontalMovePlatform and OneOffPlatform*
 - At least two kinds of game props (10%)  
   > *props.h :: class Spring and PropellerHelmet*
 - Hazards  
@@ -58,4 +62,7 @@
 Class Platform is the base class of class NormalPlatform and CrackedPlatform. And class HorizontalMovePlatform inherited from class NormalPlatform.  
 In *player.cpp* file, *void Player::move()* function uses Platform pointer to call the virtual funtion *collide()*.
 ## Bonus
-Old scores will be displayed on screen and players are able to change their names.
+- Old scores will be displayed on screen  
+- Players are able to change their names  
+- Sound effects  
+- Enable to turn off the sound effect

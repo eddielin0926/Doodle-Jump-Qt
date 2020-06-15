@@ -33,6 +33,8 @@ public:
     void spawnPlaform(int);
     void cleanPlatform();
     void end();
+    void cleanScene();
+    bool getTurnOnSound();
 
     bool isEnd;
     QTimer * timer;
@@ -42,6 +44,8 @@ public slots:
     void pause();
     void resume();
     void menu();
+    void option();
+    void switchSound();
     void setBackGround();
 
 private:
@@ -49,6 +53,7 @@ private:
     bool possiability(float);
 
     int score, highestScore, last;
+    bool turnOnSound;
     QString name;
     Player * player;
     Score * scoreData;
@@ -57,10 +62,11 @@ private:
     QGraphicsPixmapItem background[2];
     QVector<Platform *> platforms;
     QVector<Hazard *> hazards;
-
-    QGraphicsPixmapItem welcomeBackground, pauseBackground, toolBar, endBar, gameOver, tapToChange;
+    QMediaPlayer * endSound;
+    QGraphicsPixmapItem * welcomeBackground, * pauseBackground, *optionBar, * toolBar, * endBar, * gameOver, * tapToChange, * soundText;
     QGraphicsTextItem * scoreText, * endText, * nameText;
-    Button * playButton, * pauseButton, * resumeButton, * playAgainButton, * menuButton;
+    Button * playButton, * pauseButton, * resumeButton, * playAgainButton, * menuButton, *optionButton;
+    Option * OnOffButton;
 };
 
 #endif // DOODLEJUMP_H

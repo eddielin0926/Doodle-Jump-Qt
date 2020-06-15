@@ -3,17 +3,17 @@
 #include <QGraphicsScene>
 #include <QDebug>
 
-Bullet::Bullet(int h, int x, int y)
+Bullet::Bullet(QTimer * t, int h, int x, int y)
 {
     limit = h;
     vx = x;
     vy = y;
+    timer = t;
 
     setPixmap(QPixmap(":/bullet/images/bullet.png"));
     setZValue(2);
 
-    timer = new QTimer();
-    timer->start(100);
+
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
 }
 

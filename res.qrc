@@ -21,6 +21,7 @@
         <file>images/Cracked_Platform4.png</file>
         <file>images/Horiziontal_Move_Platform.png</file>
         <file>images/Normal_Platform.png</file>
+        <file>images/One-off_Platform1.png</file>
     </qresource>
     <qresource prefix="/background">
         <file>images/background.png</file>
@@ -31,6 +32,8 @@
         <file>images/endBar.png</file>
         <file>images/tapToChange.png</file>
         <file>images/line.png</file>
+        <file>images/option_bar.png</file>
+        <file>images/sounds.png</file>
     </qresource>
     <qresource prefix="/button">
         <file>images/play_button.png</file>
@@ -42,6 +45,10 @@
         <file>images/menuButton_clicked.png</file>
         <file>images/playAgainButton.png</file>
         <file>images/playAgainButton_clicked.png</file>
+        <file>images/off.png</file>
+        <file>images/option.png</file>
+        <file>images/option_clicked.png</file>
+        <file>images/on.png</file>
     </qresource>
     <qresource prefix="/font">
         <file>resource/DoodleJump.ttf</file>
@@ -65,5 +72,16 @@
         <file>images/monster4_2.png</file>
         <file>images/monster4_3.png</file>
         <file>images/hole.png</file>
+    </qresource>
+    <qresource prefix="/sound">
+        <file>resource/bullet.mp3</file>
+        <file>resource/cracked_platform.mp3</file>
+        <file>resource/end.mp3</file>
+        <file>resource/PropellerHelmet.mp3</file>
+        <file>resource/spring.mp3</file>
+        <file>resource/jump.mp3</file>
+        <file>resource/Hole.mp3</file>
+        <file>resource/Monstercollide.mp3</file>
+        <file>resource/monsterhit.mp3</file>
     </qresource>
 </RCC>

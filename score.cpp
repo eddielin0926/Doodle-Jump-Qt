@@ -88,9 +88,9 @@ void Score::addToScene(QGraphicsScene * scene)
         text->setFont(font);
         text->setPlainText(ns.name);
         text->setPos(640-text->boundingRect().width(), -ns.score + 490);
-        text->setZValue(2);
+        text->setZValue(4);
         line->setPos(640 - line->pixmap().width(), -ns.score + 520);
-        line->setZValue(2);
+        line->setZValue(4);
 
         graphics.push_back(text);
         graphics.push_back(line);
@@ -103,7 +103,9 @@ void Score::addToScene(QGraphicsScene * scene)
 void Score::clean(QGraphicsScene * scene)
 {
     for(auto graphic: graphics){
-        scene->removeItem(graphic);
+        if(graphic->scene()){
+            scene->removeItem(graphic);
+        }
         delete  graphic;
     }
     graphics.clear();

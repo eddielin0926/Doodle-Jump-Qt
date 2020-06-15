@@ -9,7 +9,7 @@ class Bullet:public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
-    Bullet(int, int = 0, int = -60);
+    Bullet(QTimer *, int, int = 0, int = -60);
     ~Bullet();
 
 public slots:

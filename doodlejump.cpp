@@ -7,14 +7,18 @@
 #include <QFontDatabase>
 
 DoodleJump::DoodleJump(QGraphicsView * v)
-{    
-    player = new Player(80, 900, this); // need change
+{
+    timer = new QTimer();
+    timer->start(20);
+
+    player = new Player(80, 900, timer, this);
     player->setVel(-43);
 
     score = 0;
     highestScore = 0;
     isEnd = false;
     name = "Doodle Jump";
+    turnOnSound = true;
 
     scene = new QGraphicsScene();
 
@@ -24,48 +28,72 @@ DoodleJump::DoodleJump(QGraphicsView * v)
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    timer = new QTimer();
-    timer->start(33);
-
-    welcomeBackground.setPixmap(QPixmap(":/background/images/welcome.png"));
-    welcomeBackground.setPos(0, 0);
-    pauseBackground.setPixmap(QPixmap(":/background/images/pause.png"));
-    pauseBackground.setZValue(2);
+    welcomeBackground = new QGraphicsPixmapItem();
+    welcomeBackground->setPixmap(QPixmap(":/background/images/welcome.png"));
+    welcomeBackground->setPos(0, 0);
+    welcomeBackground->setZValue(0);
+    pauseBackground = new QGraphicsPixmapItem();
+    pauseBackground->setPixmap(QPixmap(":/background/images/pause.png"));
+    pauseBackground->setZValue(6);
     background[0].setPixmap(QPixmap(":/background/images/background.png"));
     background[0].setPos(0, 0);
+    background[0].setZValue(0);
     background[1].setPixmap(QPixmap(":/background/images/background.png"));
     background[1].setPos(0, -background[1].pixmap().height());
-    toolBar.setPixmap(QPixmap(":/background/images/toolbar.png"));
-    toolBar.setPos(0, 0);
-    toolBar.setZValue(2);
-    endBar.setPixmap(QPixmap(":/background/images/endBar.png"));
-    endBar.setPos(0, 0);
-    endBar.setZValue(2);
-    gameOver.setPixmap(QPixmap(":/background/images/end.png"));
-    gameOver.setPos(110, 0);
-    gameOver.setZValue(2);
-    tapToChange.setPixmap(QPixmap(":/background/images/tapToChange.png"));
-    tapToChange.setPos(390, 0);
-    tapToChange.setZValue(2);
+    background[1].setZValue(0);
+    optionBar = new QGraphicsPixmapItem();
+    optionBar->setPixmap(QPixmap(":/background/images/option_bar.png"));
+    optionBar->setPos(60, 50);
+    optionBar->setZValue(1);
+    toolBar = new QGraphicsPixmapItem();
+    toolBar->setPixmap(QPixmap(":/background/images/toolbar.png"));
+    toolBar->setPos(0, 0);
+    toolBar->setZValue(8);
+    endBar = new QGraphicsPixmapItem();
+    endBar->setPixmap(QPixmap(":/background/images/endBar.png"));
+    endBar->setPos(0, 0);
+    endBar->setZValue(3);
+    gameOver = new QGraphicsPixmapItem();
+    gameOver->setPixmap(QPixmap(":/background/images/end.png"));
+    gameOver->setPos(110, 0);
+    gameOver->setZValue(2);
+    tapToChange = new QGraphicsPixmapItem();
+    tapToChange->setPixmap(QPixmap(":/background/images/tapToChange.png"));
+    tapToChange->setPos(390, 0);
+    tapToChange->setZValue(3);
+    soundText = new QGraphicsPixmapItem();
+    soundText->setPixmap(QPixmap(":/background/images/sounds.png"));
+    soundText->setPos(300, 420);
+    soundText->setZValue(3);
 
     playButton = new Button(":/button/images/play_button.png", ":/button/images/play_button_clicked.png");
     playButton->setPos(130, 230);
     connect(playButton, SIGNAL(clicked()), this, SLOT(play()));
     pauseButton = new Button(":/button/images/pauseButton.png", ":/button/images/pauseButton.png");
     pauseButton->setPos(570, 30);
-    pauseButton->setZValue(2);
+    pauseButton->setZValue(9);
     connect(pauseButton, SIGNAL(clicked()), this, SLOT(pause()));
     resumeButton = new Button(":/button/images/resumeButton.png", ":/button/images/resumeButton_clicked.png");
     resumeButton->setPos(350, 700);
-    resumeButton->setZValue(2);
+    resumeButton->setZValue(7);
     connect(resumeButton, SIGNAL(clicked()), this, SLOT(resume()));
     playAgainButton = new Button(":/button/images/playAgainButton.png", ":/button/images/playAgainButton_clicked.png");
     playAgainButton->setPos(220, 0);
-    playAgainButton->setZValue(2);
+    playAgainButton->setZValue(3);
     connect(playAgainButton, SIGNAL(clicked()), this, SLOT(play()));
     menuButton = new Button(":/button/images/menuButton.png", ":/button/images/menuButton_clicked.png");
     menuButton->setPos(400, 0);
+    menuButton->setZValue(3);
     connect(menuButton, SIGNAL(clicked()), this, SLOT(menu()));
+    optionButton = new Button(":/button/images/option.png", ":/button/images/option_clicked.png");
+    optionButton->setPos(500, 730);
+    optionButton->setZValue(3);
+    connect(optionButton, SIGNAL(clicked()), this, SLOT(option()));
+
+    OnOffButton = new Option(":/button/images/on.png", ":/button/images/off.png");
+    OnOffButton->setPos(300, 470);
+    OnOffButton->setZValue(3);
+    connect(OnOffButton, SIGNAL(clicked()), this, SLOT(switchSound()));
 
     NormalPlatform * platform = new NormalPlatform(timer);
     platform->setPos(57, 745);
@@ -81,14 +109,14 @@ DoodleJump::DoodleJump(QGraphicsView * v)
     scoreText->setFont(font);
     scoreText->setPlainText("0");
     scoreText->setPos(20, 10);
-    scoreText->setZValue(2);
+    scoreText->setZValue(9);
 
     font.setPixelSize(48);
     endText = new QGraphicsTextItem;
     endText->setFont(font);
     endText->setPlainText("     your score: 0\nyour high score: 0\n   your name: ");
     endText->setPos(90, 0);
-    endText->setZValue(2);
+    endText->setZValue(3);
 
     nameText = new QGraphicsTextItem;
     nameText->setFont(font);
@@ -100,10 +128,14 @@ DoodleJump::DoodleJump(QGraphicsView * v)
     // add item to scence
     scene->addItem(&background[0]);
     scene->addItem(&background[1]);
-    scene->addItem(&welcomeBackground);
+    scene->addItem(welcomeBackground);
     scene->addItem(playButton);
     scene->addItem(platform);
     scene->addItem(player);
+    scene->addItem(optionButton);
+
+    endSound = new QMediaPlayer();
+    endSound->setMedia(QUrl("qrc:/sound/resource/end.mp3"));
 
     scoreData = new Score();
 //    scoreData->read();
@@ -113,8 +145,6 @@ DoodleJump::DoodleJump(QGraphicsView * v)
 
 void DoodleJump::play()
 {
-    scoreData->addToScene(scene);
-
     score = 0;
     last = 0;
     name = nameText->toPlainText();
@@ -126,35 +156,32 @@ void DoodleJump::play()
     player->setPos(250, 700);
     player->reset();
 
-    if(!isEnd){
-        scene->removeItem(&welcomeBackground);
-        scene->removeItem(playButton);
-        scene->addItem(&toolBar);
-        scene->addItem(pauseButton);
-        scene->addItem(scoreText);
-    } else {
-        connect(pauseButton, SIGNAL(clicked()), this, SLOT(pause()));
+    cleanScene();
+    scene->addItem(&background[0]);
+    scene->addItem(&background[1]);
+    scene->addItem(toolBar);
+    scene->addItem(scoreText);
+    scene->addItem(pauseButton);
+    scene->addItem(player);
 
-        scene->removeItem(&gameOver);
-        scene->removeItem(&tapToChange);
-        scene->removeItem(endText);
-        scene->removeItem(nameText);
-        scene->removeItem(playAgainButton);
-        scene->removeItem(menuButton);
-        scene->removeItem(&endBar);
+    if(isEnd) {
+        connect(pauseButton, SIGNAL(clicked()), this, SLOT(pause()));
 
         NormalPlatform * platform = new NormalPlatform(timer);
         platforms.push_back(platform);
-        scene->addItem(platform);
+        // scene->addItem(platform);
     }
 
     background[0].setPos(0, 0);
     background[1].setPos(0, -background[1].pixmap().height());
 
     platforms[0]->setPos(250, 830);
+    scene->addItem(platforms[0]);
 
     spawnPlaform(background[0].pos().y());
     spawnPlaform(background[1].pos().y());
+
+    scoreData->addToScene(scene);
 
     isEnd = false;
     connect(timer, SIGNAL(timeout()), this, SLOT(setBackGround()));
@@ -166,9 +193,9 @@ void DoodleJump::pause()
     player->stop();
     disconnect(timer, SIGNAL(timeout()), this, SLOT(setBackGround()));
     resumeButton->setY(view->mapToScene(QPoint(0, 700)).y());
-    pauseBackground.setY(view->mapToScene(QPoint(0, toolBar.pixmap().height())).y() - 5);
+    pauseBackground->setY(view->mapToScene(QPoint(0, toolBar->pixmap().height())).y() - 5);
 
-    scene->addItem(&pauseBackground);
+    scene->addItem(pauseBackground);
     scene->addItem(resumeButton);
 }
 
@@ -177,12 +204,13 @@ void DoodleJump::resume()
     player->start();
     connect(timer, SIGNAL(timeout()), this, SLOT(setBackGround()));
     scene->removeItem(resumeButton);
-    scene->removeItem(&pauseBackground);
+    scene->removeItem(pauseBackground);
     player->setFocus();
 }
 
 void DoodleJump::menu()
 {
+    player->reset();
     player->setPos(80, 900);
     player->setVel(-43);
 
@@ -194,16 +222,7 @@ void DoodleJump::menu()
     view->setSceneRect(0, 0, 640, 960);
     last = view->mapToScene(QPoint(0, view->height() / 2)).y();
 
-    scene->removeItem(&endBar);
-    scene->removeItem(&gameOver);
-    scene->removeItem(&tapToChange);
-    scene->removeItem(endText);
-    scene->removeItem(nameText);
-    scene->removeItem(playAgainButton);
-    scene->removeItem(menuButton);
-    scene->removeItem(&toolBar);
-    scene->removeItem(pauseButton);
-    scene->removeItem(scoreText);
+    cleanScene();
 
     NormalPlatform * platform = new NormalPlatform(timer);
     platform->setPos(57, 745);
@@ -211,9 +230,30 @@ void DoodleJump::menu()
 
     connect(pauseButton, SIGNAL(clicked()), this, SLOT(pause()));
 
-    scene->addItem(&welcomeBackground);
+    scene->addItem(welcomeBackground);
     scene->addItem(playButton);
     scene->addItem(platform);
+    scene->addItem(player);
+    scene->addItem(optionButton);
+}
+
+void DoodleJump::option()
+{
+    cleanScene();
+
+    menuButton->setPos(360, 750);
+
+    background[0].setPos(0, 0);
+    scene->addItem(&background[0]);
+    scene->addItem(optionBar);
+    scene->addItem(soundText);
+    scene->addItem(OnOffButton);
+    scene->addItem(menuButton);
+}
+
+void DoodleJump::switchSound()
+{
+    turnOnSound = !turnOnSound;
 }
 
 void DoodleJump::setBackGround()
@@ -227,7 +267,7 @@ void DoodleJump::setBackGround()
             end();
         }
         view->setSceneRect(0, view->mapToScene(QPoint(0, 100)).y(), 640, 960);
-        toolBar.setY(view->mapToScene(QPoint(0, 0)).y());
+        toolBar->setY(view->mapToScene(QPoint(0, 0)).y());
         pauseButton->setY(view->mapToScene(QPoint(0, 30)).y());
         scoreText->setY(view->mapToScene(QPoint(0, 10)).y());
         if(background[0].pos().y() + background[0].pixmap().height() < view->mapToScene(QPoint(0, 0)).y()){
@@ -247,7 +287,7 @@ void DoodleJump::setBackGround()
         last = player->pos().y();
     }
 
-    toolBar.setY(view->mapToScene(QPoint(0, 0)).y());
+    toolBar->setY(view->mapToScene(QPoint(0, 0)).y());
     pauseButton->setY(view->mapToScene(QPoint(0, 30)).y());
     scoreText->setY(view->mapToScene(QPoint(0, 10)).y());
 
@@ -262,6 +302,13 @@ void DoodleJump::setBackGround()
     }
 
     if(player->pos().y() > view->mapToScene(QPoint(0, view->height())).y()){
+        if(turnOnSound) {
+            if(endSound->state() == QMediaPlayer::PlayingState){
+                endSound->setPosition(0);
+            } else if(endSound->state() == QMediaPlayer::StoppedState) {
+                endSound->play();
+            }
+        }
         isEnd = true;
     }
 
@@ -270,6 +317,22 @@ void DoodleJump::setBackGround()
         score = 0;
     }
     scoreText->setPlainText(QString::number(score));
+}
+
+void DoodleJump::cleanScene()
+{
+    QList<QGraphicsItem *> list = scene->items();
+    for(auto i: list){
+        if(i->scene()){
+            scene->removeItem(i);
+        }
+    }
+    return;
+}
+
+bool DoodleJump::getTurnOnSound()
+{
+    return turnOnSound;
 }
 
 void DoodleJump::spawnPlaform(int begin)
@@ -281,14 +344,16 @@ void DoodleJump::spawnPlaform(int begin)
     Platform * platform;
     for(int i = 0; i < most; ++i){
         int p = rand() % 100;
-        if(p >= 20) {
+        if(p >= 30) {
             int q = rand() % 100;
             platform = new NormalPlatform(timer);
-            if(q >= 95){
+            if(q >= 80){
                 platform->spawnProps();
             }
+        } else if (p >= 20) {
+            platform = new CrackedPlatform(timer);
         } else if (p >= 15) {
-            platform = new CrackedPlatform;
+            platform = new OneOffPlatform(timer);
         } else if (p >= 0) {
             platform = new HorizontalMovePlatform(timer);
         }
@@ -305,7 +370,7 @@ void DoodleJump::spawnPlaform(int begin)
             platforms.push_back(platform);
             if(platform->props){
                 platform->props->setPos(platform->pos().x() + 10 + rand() % 65, \
-                                        platform->pos().y() - 10);
+                                        platform->pos().y() - 15);
                 scene->addItem(platform->props);
             }
         } else {
@@ -318,7 +383,7 @@ void DoodleJump::spawnPlaform(int begin)
     if(score > 1000){
         int p = rand() % 100;
         Hazard * hazard = NULL;
-        if(p > 50){
+        if(p > 30){
             hazard = new Monster(timer);
             do{
                 hazard->setPos(rand() % 470, rand() % 920 + begin);
@@ -348,13 +413,35 @@ void DoodleJump::spawnPlaform(int begin)
 
 bool DoodleJump::isOverlapping(QGraphicsPixmapItem * target)
 {
+    int target_width;
+    if(typeid (target) != typeid (HorizontalMovePlatform*)){
+        target_width = 640;
+    } else {
+        target_width = target->pixmap().width();
+    }
     for(auto plat: platforms){
-        if(target->pos().y() <= plat->pos().y() + plat->pixmap().height() && \
-           target->pos().y() >= plat->pos().y()){
+        int plat_width;
+        if(typeid (plat) != typeid (HorizontalMovePlatform*)){
+            plat_width = 640;
+        } else {
+            plat_width = plat->pixmap().width();
+        }
+        // Determine if two rectangles overlap each other
+        if(!((target->pos().x() > plat->pos().x() + plat_width)|| \
+           (target->pos().x() + target_width < plat->pos().x()) || \
+           (target->pos().y() > plat->pos().y() + plat->pixmap().height()) || \
+           (target->pos().y() + target->pixmap().height() < plat->pos().y())))
+        {
             return true;
         }
-        if(target->pos().y() + target->pixmap().height() <= plat->pos().y() + plat->pixmap().height() && \
-           target->pos().y() + target->pixmap().height() >= plat->pos().y()){
+
+    }
+    for(auto hazard: hazards){
+        if(!((target->pos().x() > hazard->pos().x() + hazard->pixmap().width() )|| \
+           (target->pos().x() + target_width < hazard->pos().x()) || \
+           (target->pos().y() > hazard->pos().y() + hazard->pixmap().height()) || \
+           (target->pos().y() + target->pixmap().height() < hazard->pos().y())))
+        {
             return true;
         }
     }
@@ -367,7 +454,9 @@ void DoodleJump::cleanPlatform()
         // kind of weird
         auto platform = *iter;
         if(platform->pos().y() >  view->mapToScene(QPoint(0, view->height())).y()){
-            scene->removeItem(platform);
+            if(platform->scene()) {
+                scene->removeItem(platform);
+            }
             platforms.erase(iter);
             delete platform;
         } else {
@@ -392,9 +481,9 @@ void DoodleJump::end()
 {
     disconnect(timer, SIGNAL(timeout()), this, SLOT(setBackGround()));
     disconnect(pauseButton, SIGNAL(clicked()), this, SLOT(pause()));
-    endBar.setY(view->mapToScene(QPoint(0, view->height())).y() - 33);
-    gameOver.setY(view->mapToScene(QPoint(0, 0)).y() + 330);
-    tapToChange.setY(view->mapToScene(QPoint(0, 0)).y() + 660);
+    endBar->setY(view->mapToScene(QPoint(0, view->height())).y() - 33);
+    gameOver->setY(view->mapToScene(QPoint(0, 0)).y() + 330);
+    tapToChange->setY(view->mapToScene(QPoint(0, 0)).y() + 660);
     if(score > highestScore){
         highestScore = score;
     }
@@ -409,9 +498,9 @@ void DoodleJump::end()
     playAgainButton->setY(view->mapToScene(QPoint(0, 0)).y() + 730);
     menuButton->setY(view->mapToScene(QPoint(0, 0)).y() + 820);
 
-    scene->addItem(&endBar);
-    scene->addItem(&gameOver);
-    scene->addItem(&tapToChange);
+    scene->addItem(endBar);
+    scene->addItem(gameOver);
+    scene->addItem(tapToChange);
     scene->addItem(endText);
     scene->addItem(nameText);
     scene->addItem(playAgainButton);

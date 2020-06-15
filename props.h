@@ -7,6 +7,7 @@
 #include <QGraphicsPixmapItem>
 #include <QPixmap>
 #include <QTimer>
+#include <QMediaPlayer>
 
 class Player;
 class Platform;
@@ -20,6 +21,7 @@ public:
     virtual void collide(Player*){};
 protected:
     Player * player;
+    QMediaPlayer * sound;
 };
 
 class Spring: public Props

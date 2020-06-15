@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QGraphicsPixmapItem>
 #include <QTimer>
+#include <QMediaPlayer>
 #include <QDebug>
 
 class Hazard: public QObject, public QGraphicsPixmapItem
@@ -36,6 +37,9 @@ public:
 
     virtual void collide(Player *) override;
     virtual void hit() override;
+
+protected:
+    QMediaPlayer * beHitSound;
 };
 
 class Hole: public Hazard
@@ -47,6 +51,9 @@ public:
     virtual ~Hole();
 
     virtual void collide(Player *) override;
+
+private:
+    QMediaPlayer * sound;
 };
 
 #endif // HAZARD_H
