@@ -63,6 +63,7 @@
 Class Platform is the base class of class NormalPlatform and CrackedPlatform. And class HorizontalMovePlatform inherited from class NormalPlatform.  
 In *player.cpp* file, *void Player::move()* function uses Platform pointer to call the virtual funtion *collide()*.
 ## Bonus
+- The application has its own icon.
 - Old scores will be displayed on screen.  
 - Players are able to change their names.  
 - Can see the leaderboard.  

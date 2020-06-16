@@ -12,6 +12,7 @@
 class NameScore
 {
 public:
+    NameScore(){}
     NameScore(QString);
 
     QString name;
@@ -22,8 +23,8 @@ public:
 class Rank: public QGraphicsItemGroup
 {
 public:
-    Rank(){};
-    ~Rank(){};
+    Rank(){}
+    ~Rank(){}
 
     void keyPressEvent(QKeyEvent * event);
 };

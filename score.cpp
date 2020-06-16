@@ -14,7 +14,6 @@ NameScore::NameScore(QString s)
     int id = QFontDatabase::addApplicationFont(":/font/resource/DoodleJump.ttf");
     QString family = QFontDatabase::applicationFontFamilies(id).at(0);
     QFont font(family);
-    font.setBold(true);
     font.setPixelSize(48);
 
     QStringList list = s.split('#');
