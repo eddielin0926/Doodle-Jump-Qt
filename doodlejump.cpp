@@ -17,7 +17,7 @@ DoodleJump::DoodleJump(QGraphicsView * v)
     score = 0;
     highestScore = 0;
     isEnd = false;
-    name = "Doodle Jump";
+    name = "Doodler";
     turnOnSound = true;
 
     scene = new QGraphicsScene();
@@ -35,6 +35,10 @@ DoodleJump::DoodleJump(QGraphicsView * v)
     pauseBackground = new QGraphicsPixmapItem();
     pauseBackground->setPixmap(QPixmap(":/background/images/pause.png"));
     pauseBackground->setZValue(6);
+    scoreBackground = new QGraphicsPixmapItem();
+    scoreBackground->setPixmap(QPixmap(":/background/images/scoreboard.png"));
+    scoreBackground->setPos(0, 0);
+    scoreBackground->setZValue(2);
     background[0].setPixmap(QPixmap(":/background/images/background.png"));
     background[0].setPos(0, 0);
     background[0].setZValue(0);
@@ -89,11 +93,18 @@ DoodleJump::DoodleJump(QGraphicsView * v)
     optionButton->setPos(500, 730);
     optionButton->setZValue(3);
     connect(optionButton, SIGNAL(clicked()), this, SLOT(option()));
+    scoreButton = new Button(":/button/images/score_button.png", ":/button/images/score_button_clicked.png");
+    scoreButton->setPos(400, 730);
+    scoreButton->setZValue(3);
+    connect(scoreButton, SIGNAL(clicked()), this, SLOT(scores()));
 
     OnOffButton = new Option(":/button/images/on.png", ":/button/images/off.png");
     OnOffButton->setPos(300, 470);
     OnOffButton->setZValue(3);
     connect(OnOffButton, SIGNAL(clicked()), this, SLOT(switchSound()));
+    localButton = new Option(":/button/images/local_selected.png", ":/button/images/local.png");
+    localButton->setPos(490, 752);
+    localButton->setZValue(3);
 
     NormalPlatform * platform = new NormalPlatform(timer);
     platform->setPos(57, 745);
@@ -133,6 +144,7 @@ DoodleJump::DoodleJump(QGraphicsView * v)
     scene->addItem(platform);
     scene->addItem(player);
     scene->addItem(optionButton);
+    scene->addItem(scoreButton);
 
     endSound = new QMediaPlayer();
     endSound->setMedia(QUrl("qrc:/sound/resource/end.mp3"));
@@ -190,17 +202,23 @@ void DoodleJump::play()
 
 void DoodleJump::pause()
 {
+    timer->stop();
     player->stop();
     disconnect(timer, SIGNAL(timeout()), this, SLOT(setBackGround()));
     resumeButton->setY(view->mapToScene(QPoint(0, 700)).y());
     pauseBackground->setY(view->mapToScene(QPoint(0, toolBar->pixmap().height())).y() - 5);
 
-    scene->addItem(pauseBackground);
-    scene->addItem(resumeButton);
+    if(!pauseBackground->scene()){
+        scene->addItem(pauseBackground);
+    }
+    if(!resumeButton->scene()){
+        scene->addItem(resumeButton);
+    }
 }
 
 void DoodleJump::resume()
 {
+    timer->start(20);
     player->start();
     connect(timer, SIGNAL(timeout()), this, SLOT(setBackGround()));
     scene->removeItem(resumeButton);
@@ -235,6 +253,7 @@ void DoodleJump::menu()
     scene->addItem(platform);
     scene->addItem(player);
     scene->addItem(optionButton);
+    scene->addItem(scoreButton);
 }
 
 void DoodleJump::option()
@@ -249,6 +268,18 @@ void DoodleJump::option()
     scene->addItem(soundText);
     scene->addItem(OnOffButton);
     scene->addItem(menuButton);
+}
+
+void DoodleJump::scores()
+{
+    cleanScene();
+
+    menuButton->setPos(400, 850);
+    scene->addItem(scoreBackground);
+    scene->addItem(menuButton);
+    scene->addItem(localButton);
+
+    scoreData->addRankToScene(scene);
 }
 
 void DoodleJump::switchSound()

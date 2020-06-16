@@ -1,6 +1,7 @@
 # 2020-pd2-DoodleJump
 
 ## Video link
+[Video link](https://youtu.be/Z8vT1VpZrjk)  
 ## How to play
 - **Player**  
   ![Player](/images/player_Right.png "/images/player_Right.png")  
@@ -62,7 +63,11 @@
 Class Platform is the base class of class NormalPlatform and CrackedPlatform. And class HorizontalMovePlatform inherited from class NormalPlatform.  
 In *player.cpp* file, *void Player::move()* function uses Platform pointer to call the virtual funtion *collide()*.
 ## Bonus
-- Old scores will be displayed on screen  
-- Players are able to change their names  
-- Sound effects  
-- Enable to turn off the sound effect
+- Old scores will be displayed on screen.  
+- Players are able to change their names.  
+- Can see the leaderboard.  
+- Sound effects.  
+- Enable to turn off the sound effect.  
+- Let the player move smoothly.  
+- When the player hit the monster, the stars will twinkle around player's head.
+- When the player hit the Hole, the player while be sucked into the hole.

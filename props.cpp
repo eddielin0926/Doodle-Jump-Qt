@@ -38,7 +38,6 @@ void Spring::collide(Player * player)
     }
 }
 
-
 PropellerHelmet::PropellerHelmet(Platform * p, QTimer * time)
 {
     used = false;
@@ -78,7 +77,9 @@ void PropellerHelmet::collide(Player * p)
         platform->props = NULL;
         player->stop();
         player->setFocus();
+        player->props = this;
         connect(timer, SIGNAL(timeout()), this, SLOT(fly()));
+        connect(timer, SIGNAL(timeout()), player, SLOT(moveEvent()));
     }
 }
 
@@ -89,18 +90,20 @@ void PropellerHelmet::fly()
     if(count > 2){
         count = 0;
     }
-    if(player->getStatus() == 0){
-        setPos(player->pos().x() + 35, player->pos().y());
-    } else if (player->getStatus() == 1) {
-        setPos(player->pos().x() + 2, player->pos().y());
-    }
+//    if(player->getStatus() == 0){
+//        setPos(player->pos().x() + 35, player->pos().y());
+//    } else if (player->getStatus() == 1) {
+//        setPos(player->pos().x() + 2, player->pos().y());
+//    }
     endPos = pos().y() + 1000;
     ++t;
     if(t > 100){
         disconnect(timer, SIGNAL(timeout()), this, SLOT(fly()));
+        disconnect(timer, SIGNAL(timeout()), player, SLOT(moveEvent()));
         connect(timer, SIGNAL(timeout()), this, SLOT(fall()));
         player->setVel(-17);
         player->start();
+        player->props = NULL;
     }
 }
 

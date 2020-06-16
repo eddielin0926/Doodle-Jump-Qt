@@ -45,6 +45,7 @@ public slots:
     void resume();
     void menu();
     void option();
+    void scores();
     void switchSound();
     void setBackGround();
 
@@ -63,10 +64,10 @@ private:
     QVector<Platform *> platforms;
     QVector<Hazard *> hazards;
     QMediaPlayer * endSound;
-    QGraphicsPixmapItem * welcomeBackground, * pauseBackground, *optionBar, * toolBar, * endBar, * gameOver, * tapToChange, * soundText;
+    QGraphicsPixmapItem * welcomeBackground, * pauseBackground, * scoreBackground, * optionBar, * toolBar, * endBar, * gameOver, * tapToChange, * soundText;
     QGraphicsTextItem * scoreText, * endText, * nameText;
-    Button * playButton, * pauseButton, * resumeButton, * playAgainButton, * menuButton, *optionButton;
-    Option * OnOffButton;
+    Button * playButton, * pauseButton, * resumeButton, * playAgainButton, * menuButton, *optionButton, *scoreButton;
+    Option * OnOffButton, * localButton;
 };
 
 #endif // DOODLEJUMP_H

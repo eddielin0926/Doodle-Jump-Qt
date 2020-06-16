@@ -21,6 +21,7 @@ public:
     Player(int, int, QTimer *, DoodleJump * = NULL);
 
     void keyPressEvent(QKeyEvent * event);
+    void keyReleaseEvent(QKeyEvent * event);
     void setVel(float = -30);
     void start();
     void stop();
@@ -31,11 +32,13 @@ public:
     int getVel();
 
     bool shield, isHit, inHole;
+    bool left, right, space;
     Props * props;
     DoodleJump * doodlejump;
 
 public slots:
     void move();
+    void moveEvent();
     void hitByHole();
 
 private:

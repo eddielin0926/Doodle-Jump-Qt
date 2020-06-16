@@ -7,16 +7,37 @@
 #include <QFont>
 #include <QFontDatabase>
 #include <QDebug>
+#include <algorithm>
 
 NameScore::NameScore(QString s)
 {
+    int id = QFontDatabase::addApplicationFont(":/font/resource/DoodleJump.ttf");
+    QString family = QFontDatabase::applicationFontFamilies(id).at(0);
+    QFont font(family);
+    font.setBold(true);
+    font.setPixelSize(48);
+
     QStringList list = s.split('#');
     name = list.at(0);
     score = list.at(1).toInt();
+    nameGraphics = new QGraphicsTextItem;
+    nameGraphics->setFont(font);
+    nameGraphics->setPlainText(list.at(0));
+    nameGraphics->setZValue(1);
+    scoreGraphics = new QGraphicsTextItem;
+    scoreGraphics->setFont(font);
+    scoreGraphics->setPlainText(list.at(1));
+    rank = new QGraphicsTextItem;
+    nameGraphics->setZValue(1);
+    rank->setFont(font);
+    rank->setPlainText("0. ");
+    rank->setZValue(1);
 }
 
 Score::Score()
 {
+    rank = new Rank();
+    rank->setFlag(QGraphicsItem::ItemIsFocusable);
 }
 
 void Score::read()
@@ -109,4 +130,50 @@ void Score::clean(QGraphicsScene * scene)
         delete  graphic;
     }
     graphics.clear();
+}
+
+bool cmp(NameScore& a, NameScore& b){
+    return a.score > b.score;
+}
+
+void Score::addRankToScene(QGraphicsScene * scene)
+{
+    QGraphicsPixmapItem * bar = NULL;
+    int x = 110, y = 200, i = 0;
+    std::sort(data.begin(), data.end(), cmp);
+    for(auto record: data){
+        record.rank->setPlainText(QString::number(++i)+". ");
+        record.rank->setPos(x, y);
+        record.nameGraphics->setPos(x + 50, y);
+        record.scoreGraphics->setPos(640 - record.scoreGraphics->boundingRect().width(), y);
+        if(i%2==1){
+            bar = new QGraphicsPixmapItem;
+            bar->setPixmap(QPixmap(":/background/images/bar.png"));
+            bar->setPos(x - 10, y - 20);
+            rank->addToGroup(bar);
+        }
+        rank->addToGroup(record.rank);
+        rank->addToGroup(record.nameGraphics);
+        rank->addToGroup(record.scoreGraphics);
+        y += 81;
+    }
+
+    scene->addItem(rank);
+    rank->setFocus();
+}
+
+void Rank::keyPressEvent(QKeyEvent * event)
+{
+    if(boundingRect().height() > 567){
+        switch (event->key()) {
+        case Qt::Key_Up:
+            setY(pos().y() + ((pos().y() >= 0)? 0 : 20));
+            break;
+        case Qt::Key_Down:
+            setY(pos().y() + ((pos().y() <= -(boundingRect().height() - 587))? 0 : -20));
+            break;
+        default:
+            break;
+        }
+    }
 }

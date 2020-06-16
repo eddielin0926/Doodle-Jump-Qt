@@ -15,6 +15,9 @@ Player::Player(int x, int y, QTimer * t, DoodleJump * dj)
     isHit = false;
     props = NULL;
     timer = t;
+    left = false;
+    right = false;
+    space = false;
 
     mouth = new QGraphicsPixmapItem(QPixmap(":/player/images/player_Mouth.png"));
     mouth->setZValue(5);
@@ -37,6 +40,7 @@ Player::Player(int x, int y, QTimer * t, DoodleJump * dj)
     setZValue(4);
 
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(moveEvent()));
 
     // make the player focusable and set it to be the current focus
     setFlag(QGraphicsItem::ItemIsFocusable);
@@ -49,13 +53,51 @@ Player::Player(int x, int y, QTimer * t, DoodleJump * dj)
 
 void Player::keyPressEvent(QKeyEvent *event)
 {
-    static const int offset = pixmap().width() / 2; // make up the margin of picture
-    static const int DISPL = 15; // Displacement
-
-    // move left or right
     switch (event->key()) {
     case Qt::Key_A:
     case Qt::Key_Left:
+        left = true;
+        break;
+    case Qt::Key_D:
+    case Qt::Key_Right:
+        right = true;
+        break;
+    case Qt::Key_Space:
+        space = true;
+        break;
+    default:
+        break;
+    }
+
+    return;
+}
+
+void Player::keyReleaseEvent(QKeyEvent * event)
+{
+    switch (event->key()) {
+    case Qt::Key_A:
+    case Qt::Key_Left:
+        left = false;
+        break;
+    case Qt::Key_D:
+    case Qt::Key_Right:
+        right = false;
+        break;
+    case Qt::Key_Space:
+        space = false;
+        break;
+    default:
+        break;
+    }
+
+}
+
+void Player::moveEvent()
+{
+    static const int offset = pixmap().width() / 2; // make up the margin of picture
+    static const int DISPL = 15; // Displacement
+
+    if(left){
         setX(pos().x() - DISPL < -pixmap().width() + offset? 600 - offset : pos().x() - DISPL);
         if(status != 0){
             if(status == 2){
@@ -65,9 +107,12 @@ void Player::keyPressEvent(QKeyEvent *event)
             status = 0;
             setPixmap(imgs[status][0]);
         }
-        break;
-    case Qt::Key_D:
-    case Qt::Key_Right:
+        if(props){
+            props->setPos(pos().x() + 35, pos().y());
+        }
+    }
+
+    if(right){
         setX(pos().x() + DISPL > 600 - offset? -pixmap().width() + offset : pos().x() + DISPL);
         if(status != 1){
             if(status == 2){
@@ -77,23 +122,24 @@ void Player::keyPressEvent(QKeyEvent *event)
             status = 1;
             setPixmap(imgs[status][0]);
         }
-        break;
-    case Qt::Key_Space:
+        if(props){
+            props->setPos(pos().x() + 2, pos().y());
+        }
+    }
+
+    if(space){
         if(status != 2 || count > 2){
             shoot();
         }
-        break;
-    case Qt::Key_Up:
-        setY(pos().y() - DISPL);
-        break;
-    case Qt::Key_Down:
-        setY(pos().y() + DISPL);
-        break;
-    default:
-        break;
     }
 
-     return;
+    if(props){
+        if(status == 0){
+            props->setPos(pos().x() + 35, pos().y());
+        } else if (status == 1) {
+            props->setPos(pos().x() + 2, pos().y());
+        }
+    }
 }
 
 void Player::setVel(float v)
@@ -108,12 +154,14 @@ void Player::start()
 {
     setFocus();
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(moveEvent()));
 }
 
 void Player::stop()
 {
     clearFocus();
     disconnect(timer, SIGNAL(timeout()), this, SLOT(move()));
+    disconnect(timer, SIGNAL(timeout()), this, SLOT(moveEvent()));
 }
 
 int Player::getVel()
@@ -174,6 +222,9 @@ void Player::reset()
     }
     isHit = false;
     setPixmap(imgs[1][0]);
+    left = false;
+    right = false;
+    space = false;
 }
 
 int Player::getStatus()
